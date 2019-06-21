@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "StartShow";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Want To Show Again</h2>
+
+<div>
+    <center>
+        <button onclick="ShowAgain()" class="btn btn-default">Start Show</button>
+    </center>
+</div>
+
+
+<script type="text/javascript">
+    function ShowAgain()
+    {
+        window.location.href = "../Firebase/ShowAgain";
+    }
+
+</script>

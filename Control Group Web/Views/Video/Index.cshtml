@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Videos</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<div class="speech">     <input type="text" class="form-control" name="q" id="transcript" placeholder="Speak" />     <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />   </div>
+<div id="videos">
+    
+    <div id="videos">
+        <div id="allSchools">
+            @if (Session["videos"] != null)
+            {
+                foreach (KeyValuePair<Control_Group_Web.Models.School, Dictionary<Control_Group_Web.Models.Committee, List<Control_Group_Web.Models.Video>>> p1 in ((Dictionary<Control_Group_Web.Models.School, Dictionary<Control_Group_Web.Models.Committee, List<Control_Group_Web.Models.Video>>>)(Session["videos"])))
+                {
+                    if (p1.Key.active)
+                    {
+                        p1.Key.views++;
+                        int video_per_school_score = 0;
+                        <h3 id="schoolName">@p1.Key.name</h3>
+                        <div id="@p1.Key.name">
+                            @foreach (KeyValuePair<Control_Group_Web.Models.Committee, List<Control_Group_Web.Models.Video>> p2 in p1.Value)
+                            {
+                                if (p2.Key.active)
+                                {
+                                    p2.Key.views++;
+                                    foreach (Control_Group_Web.Models.Video url in p2.Value)
+                                    {
+                                        if (url.url != "url" && !url.seen && video_per_school_score < (int)Session["video_per_school"] && url.active)
+                                        {
+                                            video_per_school_score++;
+                                            url.seen = true;
+                                            <video class="video" id="@p1.Key.name,@p2.Key.name,@url.url" src="@url.url" onclick="SendVideoData(this.id)" controls="controls" width="200" height="200" autoplay="autoplay"></video>
+                                        }
+                                    }
+                                }
+                            }
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+<script>
+    
+    setInterval(callToShuffleCommittees, 20000);
+
+  
+
+    function callToShuffleCommittees() {
+
+            var model = new Object();
+            model.order = "committee";
+            jQuery.ajax({
+                type: "POST",
+                url: "@Url.Action("Play")",
+                dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ request: model }),
+            success: function (response) {
+                if (response != null && response.success) {
+                    window.location.href = "../Video/Index";
+                } else {
+                    // DoSomethingElse()
+                    //alert(response.responseText);
+                    window.location.href = "../Video/StartShow";
+                }
+            },
+            error: function (response) {
+                alert("error!");  //
+            }
+            });
+    }
+
+    function SendVideoData(id) {
+        var model = new Object();
+        model.order = id;
+        jQuery.ajax({
+            type: "POST",
+            url: "@Url.Action("PrepareForVideo")",
+            dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ id: model }),
+        success: function (response) {
+            if (response != null && response.success) {
+                window.location.href = "../Video/show";
+            } else {
+                // DoSomethingElse()
+                alert(response.responseText);
+            }
+        },
+        error: function (response) {
+            alert("error!");  //
+        }
+    });
+    }
+
+    function sendNotification(id) {
+        dataArray = id.split(",");
+        firebase.database().ref("notifications/" + dataArray[0] + "/" + dataArray[1] + "/" + dataArray[2] + "/").push().set(dataArray[3]);
+
+    }
+
+
+
+
+
+
+</script>

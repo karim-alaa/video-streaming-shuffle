@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "showRemaningVideos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<div class="js">
+    <div id="preloader"></div>
+</div>
+
+
+<style type="text/css">
+    .js div#preloader {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 999;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        background: #333 url('http://files.mimoymima.com/images/loading.gif') no-repeat center center;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var model = new Object();
+    model.order = "committee";
+    jQuery.ajax({
+        type: "POST",
+        url: "@Url.Action("Play","Video")",
+        dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify({ request: model }),
+    success: function (response) {
+        if (response != null && response.success) {
+            window.location.href = "../Video/Index";
+        } else {
+            // DoSomethingElse()
+            //alert(response.responseText);
+            window.location.href = "../Video/StartShow";
+        }
+    },
+    error: function (response) {
+        alert("error!");  //
+    }
+    });
+
+</script>
+

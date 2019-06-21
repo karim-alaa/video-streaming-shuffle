@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "show";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).admin)/@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).school)/@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).committee)</h2>
+
+
+<div align="center" class="embed-responsive embed-responsive-16by9">
+    <video controls autoplay loop class="embed-responsive-item">
+        <source src="@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).url)" type="video/mp4">
+    </video>
+</div>
+
+<center>
+
+    <div id="buttons">
+        <button id="close" class="btn btn-default" onclick="goToVideos()">Close</button>
+        <button id="@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).admin),@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).school),@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).committee),@(((Control_Group_Web.Models.VideoToShow)Session["VideoToShow"]).url)" class="btn btn-primary" onclick="sendNotification(this.id)">Send Notification</button>
+    </div>
+
+</center>
+
+<script>
+
+    function goToVideos() {
+        window.location.href = "../Firebase/Index";
+    }
+
+
+    function sendNotification(id) {
+        dataArray = id.split(",");
+        var f = firebase.database().ref("notifications/" + dataArray[0] + "/" + dataArray[1] + "/" + dataArray[2] + "/").push().set(dataArray[3]);
+        setInterval(goToVideos, 1000);
+    }
+
+
+</script>
