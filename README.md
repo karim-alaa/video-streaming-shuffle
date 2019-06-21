@@ -10,3 +10,6 @@ And allow supervisor to send notification for any committee to alert if there is
 * ASP.NET
 * Entity Framework (CodeFirst)
 * Firebase
+
+# Android App
+* Notifications Sent to [notification-receiver](https://github.com/karimalaa22/notification-receiver)
