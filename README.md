@@ -8,7 +8,6 @@ And allow supervisor to send notification for any committee to alert if there is
 
 # Development
 * ASP.NET
-* Entity Framework (CodeFirst)
 * Firebase
 
 # Android App
